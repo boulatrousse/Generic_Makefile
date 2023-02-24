@@ -32,6 +32,10 @@ mkbuild:
 $(NAME):                $(OBJECTS)
                                 $(CC) $(FLAGS) -o $(NAME)
 
+norm:
+				norminette $(OBJS_DIR)
+				norminette $(HEADER_DIR)
+
 clean:
                                 $(RM) $(OBJS)
                                 $(RM) $(BUILD)
