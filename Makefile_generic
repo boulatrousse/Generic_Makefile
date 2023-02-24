@@ -1,0 +1,45 @@
+.PHONY:                 all $(NAME) clean fclean re mkbuild
+
+GREEN                   = \033[1;32m
+PURPLE                  = \033[1;35m
+END                     = \033[0m
+
+NAME                    = ${file}
+
+OBJS_DIR                = srcs/
+OBJS                    = main.c \
+
+CC                      = cc
+
+FLAGS                   = -Wall -Wextra -Werror
+
+HEADER_DIR              = header/
+HEADER                  = ${file}.h
+
+BUILD                   = build/
+
+RM                      = rm -rf
+
+$(BUILD)%.o:            = $(OBJS_DIR)%.c $(HEADER_DIR)/$(HEADER)
+                                @mkdir -p $(@D)
+                                $(CC) $(FLAGS) -I $(HEADER) -c $< -o $@
+
+all:                    mkbuild $(HEADER_DIR) $(NAME)
+
+mkbuild:
+                                @mkdir -p build
+
+$(NAME):                $(OBJECTS)
+                                $(CC) $(FLAGS) -o $(NAME)
+
+clean:
+                                $(RM) $(OBJS)
+                                $(RM) $(BUILD)
+                                @echo "$(GREEN)[CLEAN DONE]$(END)"
+
+fclean:                 clean
+                                $(RM) $(NAME)
+                                @echo "$(GREEN)[FCLEAN DONE]$(END)"
+
+re:                     fclean all
+                                @$(MAKE) all
