@@ -1,4 +1,4 @@
-.PHONY:					all $(NAME) clear mkbuild clear clean fclean re init
+.PHONY:					all $(NAME) clear mkbuild clear clean fclean re norm init
 
 RED			            = \033[1;31m
 GREEN					= \033[1;32m
@@ -29,13 +29,7 @@ $(BUILD_DIR)%.o: 		$(DIR)%.c $(HEADER_DIR)* Makefile
 							@echo "$(BLUE)[CREATE]$(EOC) $@"
 							@$(GCC) $(CFLAGS) -I$(HEADER_DIR) -I/usr/include -O3 -c $< -o $@
 
-init:
-							@mkdir -p srcs
-							@mkdir -p header
-							@touch .gitignore
-							@echo ".vscode\n*.o" >> .gitignore
-							@touch srcs/main.c
-
+							
 all: 					clear mkbuild $(HEADER_DIR) $(NAME) 
 						
 mkbuild:
@@ -48,9 +42,6 @@ $(NAME): 				$(OBJECTS)
 							@$(GCC) $(OBJECTS) -o $(NAME)
 							@echo "$(GREEN) ➤  $(NAME) is ready !$(EOC)"
 
-norm:
-							norminette $(SRC)
-							norminette $(HEADER_DIR)
 clean:					
 							@${RM} $(OBJECTS)
 							@${RM} ${BUILD_DIR}
@@ -63,3 +54,29 @@ fclean:					clean
 re:						fclean all
 							@$(MAKE) -silent all
 							@echo "$(PURPLE)[REMAKE DONE] $(EOC)"
+norm:
+							norminette $(SRC)
+							norminette $(HEADER_DIR)
+							
+init:
+							@mkdir -p srcs
+							@mkdir -p header
+							@touch .gitignore
+							@echo ".vscode\n*.o" >> .gitignore
+
+							@touch srcs/main.c
+							@echo "#include \"$(NAME).h\"" >> srcs/main.c
+							@echo "\nint main(int argc, char **argv)" >> srcs/main.c
+							@echo "{\n\n	return (SUCCESS)\n}" >> srcs/main.c
+
+							@touch header/$(NAME).h
+							@echo "#ifndef">> header/$(NAME).h
+							@echo "# define" >> header/$(NAME).h
+							@echo "# include <unistd.h>" >> header/$(NAME).h
+							@echo "# include <stdio.h>" >> header/$(NAME).h
+							@echo "# include <stdlib.h>\n" >> header/$(NAME).h
+							@echo "# define SUCCESS	EXIT_SUCCESS" >> header/$(NAME).h
+							@echo "# define FAILURE	EXIT_FAILURE\n" >> header/$(NAME).h
+							@echo "// -------------------- UTILS --------------------\n\n" >> header/$(NAME).h
+							@echo "#endif" >> header/$(NAME).h
+							@echo "$(PURPLE)[INIT DONE] $(EOC)"
