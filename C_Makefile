@@ -32,6 +32,8 @@ $(BUILD_DIR)%.o: 		$(DIR)%.c $(HEADER_DIR)* Makefile
 init:
 							@mkdir -p srcs
 							@mkdir -p header
+							@touch .gitignore
+							@echo ".vscode\n*.o" >> .gitignore
 							@touch srcs/main.c
 
 all: 					clear mkbuild $(HEADER_DIR) $(NAME) 
